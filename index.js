@@ -16,11 +16,25 @@ async function run(){
     try{
         await client.connect();
         const productCollection = client.db("products").collection("product");
+        const cartCollection = client.db("products").collection("cart");
 
-
+        // get all product we have 
         app.get('/furnitures',async(req,res)=>{
             const product = await productCollection.find().toArray();
             res.send(product)
+        })
+
+        // add to cart all here
+        // get the cart data 
+        app.get('/allCartProduct',async(req,res)=>{
+          const cartProduct = await cartCollection.find().toArray();
+          res.send(cartProduct)
+      })
+        // post the cart data 
+        app.post('/addToCart',async(req,res)=>{
+          const product = req.body;
+          const result = await cartCollection.insertOne(product); 
+          res.send(result)
         })
 
     }
